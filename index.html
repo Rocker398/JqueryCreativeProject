@@ -1,0 +1,121 @@
+<html>
+	<head>
+		<title>All in one Search</title>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+		<style type="text/css">
+			html {
+				background: #ffffff;
+			}
+		
+			body {
+				font-family: 'Montserrat', sans-serif;
+				font-size: 15px;
+				background: #f7f7f7;
+				padding: 10px 20px;
+				margin: 16px;
+				box-shadow: 0px 0px 13px #d4d4d4;
+			}
+		
+			ul {
+				list-style: none;
+				margin: 9px;
+				padding: 0;
+			}
+			
+			.searchInput {
+				padding: 8px 17px;
+				border: 1px solid #bfbfbf;
+				border-radius: 2px;
+			}
+			
+			.searchButton {
+				background: #87f153;
+				border: none;
+				border-radius: 2px;
+				padding: 9px 35px;
+				cursor: pointer;
+			}
+			
+			.searchButton:hover {
+				background: #7ce847;
+			}
+			
+			.resultItem {				
+				background-color: #ffffff;
+				box-shadow: 0px 3px 14px #e8e8e8;
+				padding: 10px;
+				margin: 5px 0;
+			}
+			
+			.resultItem:hover {				
+				background-color: #e8e8e8;
+			}
+			
+			.searchResults {
+				margin: 25px 0 0 0;
+			}
+			
+			.searchResults a {				
+				color: #272727;
+				text-decoration: none;
+			}
+			
+			.resultItem .resultTitle {
+				font-size: 18px;
+			}
+			
+			.resultItem .resultSnippet {
+				font-size: 13px;
+				margin-top: 5px;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="searchContainer">
+			<h1>Shop-Wiz</h1>
+			<h4>Search shopping sites like Amazon, Walmart and eBay in one place!</h4>
+			<input class="searchInput" type="text" placeholder="Search Item" />
+			<input class="searchButton" type="button" value="Search" />
+		</div>
+		<div class="searchResults">
+		</div>
+	
+		<script>
+		
+			var APIKey = 'AIzaSyB7nyswS9GDdhD5jkiLZvAG0b7HY5YQ-Mc';
+			var customSearch = '000119531687466241094:hbp1vzufgk4';
+
+			$(document).ready(function () {
+				$('.searchButton').on('click', function () {
+					var searchVal = $('.searchInput').val();
+					if (searchVal.length > 0) {
+						var myurl= "https://www.googleapis.com/customsearch/v1?key=" + APIKey + "&cx=" + customSearch +"&q=" + searchVal;
+						$.ajax({
+							url : myurl,
+							crossDomain: true,
+							dataType : "jsonp",
+							success : function(parsed_json) {
+								console.log(parsed_json);
+								var items = parsed_json['items'];
+								var everything = '';
+									
+								for (var i = 0; i < items.length; i++) {
+									var title = items[i]['htmlTitle'];
+									var htmlSnippet = items[i]['htmlSnippet'];
+									var link = items[i]['link'];
+									
+									everything += "<a href=\"" + link + "\"><div class=\"resultItem\"><span class=\"resultTitle\">" + title + "</span><br/><span class=\"resultSnippet\">" + htmlSnippet +"</span></div></a>";
+								}
+								
+								$(".searchResults").html(everything);
+							}
+						});
+					}
+				});
+			});
+		 
+		</script>
+	</body>
+</html>
